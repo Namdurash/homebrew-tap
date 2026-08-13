@@ -1,8 +1,8 @@
 class Aif < Formula
   desc "Put an existing project on AI SDLC rails"
   homepage "https://github.com/Namdurash/ai-foundry"
-  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.3.0.tar.gz"
-  sha256 "7d2e6b1e4beca7ed6b5102f6f6a43fe896e5fb67235f5ccc6d0f8f78c6a55005"
+  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.4.0.tar.gz"
+  sha256 "7f24ae9906095154e9822c11dfe17485f72aaaff22db0dff52a41ad4a230e6b0"
   license "MIT"
 
   depends_on "jq"
@@ -33,13 +33,20 @@ class Aif < Formula
     assert_match "anthropic", shell_output("#{bin}/aif profiles")
     # Reads no project and shells out to nothing, so it is safe in a sandbox.
     assert_match "usage: aif cost", shell_output("#{bin}/aif cost --help")
-    # The defect 0.3.0 fixes. `aif init` copies these into a project with `cp`,
-    # and the runner execs them directly, so a hook that loses its mode anywhere
-    # along the way turns off cost accounting silently — the ledger keeps filling
-    # with gate rows and looks complete. This is the packaging layer of that
-    # chain: the tarball carries the bit and `libexec.install` preserves it, but
-    # nothing else here asserted either.
+    # The defect 0.3.0 fixed, kept as a standing check. `aif init` copies these
+    # into a project with `cp`, and the runner execs them directly, so a hook
+    # that loses its mode anywhere along the way turns off cost accounting
+    # silently — the ledger keeps filling with gate rows and looks complete.
+    # This is the packaging layer of that chain: the tarball carries the bit and
+    # `libexec.install` preserves it, but nothing else here asserted either.
     assert_predicate libexec/"sets/claude/hooks/meter.sh", :executable?
     assert_predicate libexec/"sets/claude/hooks/guard.sh", :executable?
+    # The bottle is a (CLI, set) pair and the two are versioned separately, so a
+    # release that bumps only AIF_VERSION ships stations from the previous set
+    # against the current gates. That mismatch is invisible from `aif version`.
+    assert_match "SET_VERSION=#{version}", (libexec/"sets/claude/set.meta").read
+    # Added in 0.4.0: proves the tarball carries the new set, not just a new
+    # version string on the old one.
+    assert_path_exists libexec/"sets/claude/gates/plan-form.sh"
   end
 end
