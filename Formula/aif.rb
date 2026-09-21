@@ -1,8 +1,8 @@
 class Aif < Formula
   desc "Put an existing project on AI SDLC rails"
   homepage "https://github.com/Namdurash/ai-foundry"
-  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.4.2.tar.gz"
-  sha256 "af12469faeaa6b89256455dcc50b82d95776e76cc863c6c2520997a7223f6d64"
+  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "b1e569a53d76f141d681ec92d27469c3cef82e59e278bd07b0366b5434c0df73"
   license "MIT"
 
   depends_on "jq"
@@ -45,8 +45,14 @@ class Aif < Formula
     # release that bumps only AIF_VERSION ships stations from the previous set
     # against the current gates. That mismatch is invisible from `aif version`.
     assert_match "SET_VERSION=#{version}", (libexec/"sets/claude/set.meta").read
-    # Added in 0.4.0: proves the tarball carries the new set, not just a new
-    # version string on the old one.
-    assert_path_exists libexec/"sets/claude/gates/plan-form.sh"
+    # Proves the tarball carries the new set, not just a new version string on
+    # the old one — and 0.5.0 is the release where that stopped being a
+    # formality. The rebuild replaced the spec chain with one Definition of
+    # Ready, so the set is told apart by what it now has AND by what it no
+    # longer ships: a tap serving the old tree under the new version would pass
+    # every other assertion here.
+    assert_path_exists libexec/"sets/claude/gates/ready.sh"
+    refute_path_exists libexec/"sets/claude/gates/plan-form.sh"
+    refute_path_exists libexec/"sets/claude/gates/spec-form.sh"
   end
 end
