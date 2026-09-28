@@ -54,5 +54,10 @@ class Aif < Formula
     assert_path_exists libexec/"sets/claude/gates/ready.sh"
     refute_path_exists libexec/"sets/claude/gates/plan-form.sh"
     refute_path_exists libexec/"sets/claude/gates/spec-form.sh"
+    # 0.9.0 closed the cycle after the worker: `aif land` in the CLI and the
+    # reviewer's brief in the set. A tap serving the old tree under the new
+    # version would still pass everything above.
+    assert_match "land", shell_output("#{bin}/aif help")
+    assert_path_exists libexec/"sets/claude/skills/aif-review/SKILL.md"
   end
 end
