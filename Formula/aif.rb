@@ -59,5 +59,13 @@ class Aif < Formula
     # version would still pass everything above.
     assert_match "land", shell_output("#{bin}/aif help")
     assert_path_exists libexec/"sets/claude/skills/aif-review/SKILL.md"
+    # 0.11.0 handed the stations the stack: a runner fragment per template in
+    # the set, and `aif project guide` in the CLI. The fragments are what the
+    # worker appends to the plan and tests stations' prompts, so a tarball
+    # carrying the 0.10.x set under this version would ship stations that
+    # work from their general rules while doctor reports the fragment present.
+    assert_path_exists libexec/"sets/claude/stacks/jest.md"
+    assert_path_exists libexec/"sets/claude/stacks/pytest.md"
+    assert_match "guide", shell_output("#{bin}/aif help")
   end
 end
