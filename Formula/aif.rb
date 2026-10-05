@@ -67,5 +67,15 @@ class Aif < Formula
     assert_path_exists libexec/"sets/claude/stacks/jest.md"
     assert_path_exists libexec/"sets/claude/stacks/pytest.md"
     assert_match "guide", shell_output("#{bin}/aif help")
+    # 0.13.0 counts a ticket by its rules and gives the analyst the map of every
+    # ticket's rules: `aif rules` is a CLI file of its own, and the templates
+    # carry the rules cap and no longer the plan-file and diff-line caps. A
+    # tarball carrying the 0.12.x tree under this version would pass everything
+    # above.
+    assert_path_exists libexec/"lib/cmd_rules.sh"
+    assert_match(/^ +rules +Every ticket/, shell_output("#{bin}/aif help"))
+    template = (libexec/"sets/claude/project.templates/jest.json").read
+    assert_match "ticket_rules_max", template
+    refute_match "\"diff_lines_max\": 400", template
   end
 end
