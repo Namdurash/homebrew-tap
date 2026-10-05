@@ -77,5 +77,12 @@ class Aif < Formula
     template = (libexec/"sets/claude/project.templates/jest.json").read
     assert_match "ticket_rules_max", template
     refute_match "\"diff_lines_max\": 400", template
+    # 0.14.0 put the product partner after the reviewer: on the human's land the
+    # reviewer's brief hands the card to the product partner's demo, which holds
+    # the build to its request before aif land runs. The change is all in two
+    # skills' text, so a tarball carrying the 0.13.x set under this version would
+    # pass everything above.
+    assert_match "demo: not as expected", (libexec/"sets/claude/skills/aif-po/SKILL.md").read
+    assert_match "The product partner's demo", (libexec/"sets/claude/skills/aif-review/SKILL.md").read
   end
 end
