@@ -84,5 +84,14 @@ class Aif < Formula
     # pass everything above.
     assert_match "demo: not as expected", (libexec/"sets/claude/skills/aif-po/SKILL.md").read
     assert_match "The product partner's demo", (libexec/"sets/claude/skills/aif-review/SKILL.md").read
+    # 0.16.0 laid the ground for an autopilot: `aif board release` sweeps the
+    # Backlog cards whose dependencies are Done and landed and `aif board head`
+    # returns the line a card is routed on — both named by `aif help`, the sweep
+    # a CLI file of its own — and the reviewer's verdict has a fixed first line.
+    # A tarball carrying the 0.15.x tree under this version would pass
+    # everything above.
+    assert_path_exists libexec/"lib/release.sh"
+    assert_match "head, release", shell_output("#{bin}/aif help")
+    assert_match "wrong:", (libexec/"sets/claude/skills/aif-review/SKILL.md").read
   end
 end
