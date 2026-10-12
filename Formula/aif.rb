@@ -1,8 +1,8 @@
 class Aif < Formula
   desc "Put an existing project on AI SDLC rails"
   homepage "https://github.com/Namdurash/ai-foundry"
-  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.16.0.tar.gz"
-  sha256 "b83170a8dfb7968fbfa6256cc68372ca774073abb19d02e8442de02b329409cf"
+  url "https://github.com/Namdurash/ai-foundry/archive/refs/tags/v0.17.0.tar.gz"
+  sha256 "7c449b776664fcc093c90167347b8559c50eec3e66cac7c209fac17494f3dcff"
   license "MIT"
 
   depends_on "jq"
