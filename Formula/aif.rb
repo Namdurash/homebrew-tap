@@ -93,5 +93,22 @@ class Aif < Formula
     assert_path_exists libexec/"lib/release.sh"
     assert_match "head, release", shell_output("#{bin}/aif help")
     assert_match "wrong:", (libexec/"sets/claude/skills/aif-review/SKILL.md").read
+    # 0.17.0 is the shift: `aif start` opens the review, analyst and owner
+    # sessions one at a time while the loop builds in another terminal, its
+    # policy a jq file over the board's facts and a request's progress read by
+    # a library of its own — three CLI files, named by `aif help`. The set's
+    # land judges the merge in the ticket's own worktree, the templates name
+    # what the gates' copies leave out, and the reviewer posts again with its
+    # head a verdict bash cannot read. A tarball carrying the 0.16.x tree under
+    # this version would pass everything above.
+    assert_path_exists libexec/"lib/cmd_start.sh"
+    assert_path_exists libexec/"lib/start.jq"
+    assert_path_exists libexec/"lib/requests.sh"
+    assert_match(/^ +start +The shift/, shell_output("#{bin}/aif help"))
+    assert_match "\"leave_out\"", (libexec/"sets/claude/project.templates/jest.json").read
+    review = (libexec/"sets/claude/skills/aif-review/SKILL.md").read
+    assert_match "in the ticket's own worktree", review
+    assert_match "A verdict already on the card", review
+    refute_match "runs the suite on the result", review
   end
 end
