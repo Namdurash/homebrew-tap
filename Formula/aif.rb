@@ -110,5 +110,17 @@ class Aif < Formula
     assert_match "in the ticket's own worktree", review
     assert_match "A verdict already on the card", review
     refute_match "runs the suite on the result", review
+    # 0.18.0 sets aif up on any stack: `aif setup` — a CLI file of its own,
+    # named by `aif help` — has the profile's model write the test contract,
+    # the probe gate proves it, and a runner with no template of its own
+    # starts from the base template. The jest template makes jest-junit write
+    # each case's file. A tarball carrying the 0.17.x tree under this version
+    # would pass everything above.
+    assert_path_exists libexec/"lib/cmd_setup.sh"
+    assert_path_exists libexec/"sets/claude/gates/probe.sh"
+    assert_path_exists libexec/"sets/claude/project.templates/base.json"
+    assert_match(/^ +setup +The model/, shell_output("#{bin}/aif help"))
+    assert_match "JEST_JUNIT_ADD_FILE_ATTRIBUTE=true", (libexec/"sets/claude/project.templates/jest.json").read
+    assert_match "The test contract", (libexec/"sets/claude/skills/aif-setup/SKILL.md").read
   end
 end
