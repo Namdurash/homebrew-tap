@@ -122,5 +122,22 @@ class Aif < Formula
     assert_match(/^ +setup +The model/, shell_output("#{bin}/aif help"))
     assert_match "JEST_JUNIT_ADD_FILE_ATTRIBUTE=true", (libexec/"sets/claude/project.templates/jest.json").read
     assert_match "The test contract", (libexec/"sets/claude/skills/aif-setup/SKILL.md").read
+    # 0.19.0 builds on opus at a named effort — the templates put both tiers at
+    # opus, and every station's aif:meta names its effort — and takes a plan to
+    # the product partner whole: mapped first into requests/MAP.md, read by a
+    # function of the requests library, its technical work the analyst's, and
+    # plan mode opened by the shift with its plans in the project. A tarball
+    # carrying the 0.18.x tree under this version would pass everything above.
+    jest = (libexec/"sets/claude/project.templates/jest.json").read
+    assert_match "\"routine\": \"opus\"", jest
+    refute_match "\"routine\": \"sonnet\"", jest
+    assert_match "\"effort\": \"xhigh\"", (libexec/"sets/claude/agents/aif-implement.md").read
+    po = (libexec/"sets/claude/skills/aif-po/SKILL.md").read
+    assert_match "requests/MAP.md", po
+    assert_match "## Four ways in", po
+    refute_match "## Three ways in", po
+    assert_match "A plan's technical work", (libexec/"sets/claude/skills/aif-ba/SKILL.md").read
+    assert_match "aif_request_map_json", (libexec/"lib/requests.sh").read
+    assert_match "plansDirectory", (libexec/"lib/runner_claude.sh").read
   end
 end
