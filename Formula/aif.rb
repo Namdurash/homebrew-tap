@@ -139,5 +139,19 @@ class Aif < Formula
     assert_match "A plan's technical work", (libexec/"sets/claude/skills/aif-ba/SKILL.md").read
     assert_match "aif_request_map_json", (libexec/"lib/requests.sh").read
     assert_match "plansDirectory", (libexec/"lib/runner_claude.sh").read
+    # 0.21.0 has every stage commit what it wrote before it ends: `aif _save`
+    # and `aif _unsaved` are a CLI file of their own, every skill starts with
+    # the one and ends with the other, a stopped run commits its refused attempt
+    # as kept, and the managed .gitignore block names the drawing aif explain
+    # makes. A tarball carrying the 0.20.x tree under this version would pass
+    # everything above.
+    assert_path_exists libexec/"lib/cmd_save.sh"
+    assert_match "usage: aif _save", shell_output("#{bin}/aif _unsaved --help")
+    assert_match "Aif-Kept", (libexec/"lib/cmd_work.sh").read
+    assert_match "/*/explain.md", (libexec/"lib/paths.sh").read
+    ba = (libexec/"sets/claude/skills/aif-ba/SKILL.md").read
+    assert_match "aif _save ba", ba
+    assert_match "aif _unsaved", ba
+    assert_match "aif _save po", (libexec/"sets/claude/skills/aif-po/SKILL.md").read
   end
 end
